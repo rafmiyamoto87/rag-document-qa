@@ -1,57 +1,67 @@
-# Document Q&A System with RAG
+# Document Q&A with RAG
 
 Ask questions about your documents using AI and semantic search.
 
-## What It Does
+## What it does
 
-- Upload PDF or TXT documents
-- Ask questions in plain English
-- Get accurate answers based only on the document content
-- Uses RAG (Retrieval Augmented Generation) to find relevant sections
+Upload a PDF or text file and ask questions. The system finds relevant sections using embeddings and provides accurate answers based only on the document content.
 
-## Technologies
+## Tech stack
 
 - Python
 - OpenAI API (GPT-4o-mini, embeddings)
-- tiktoken (token counting)
-- PyPDF2 (PDF reading)
-- NumPy (similarity calculations)
+- tiktoken
+- PyPDF2
+- NumPy
 
 ## Setup
 
-1. Install dependencies:
+Install dependencies:
 ```bash
-pip install openai python-dotenv PyPDF2 tiktoken numpy
+pip install -r requirements.txt
 ```
 
-2. Create `.env` file:
+Create `.env`:
 ```
 OPENAI_API_KEY=your-key-here
 ```
 
-3. Run:
+Run:
 ```bash
 python rag_qa.py
 ```
 
 ## Example
 ```
-Enter document path: handbook.pdf
-✅ Loaded 5,000 characters
-📊 Created 5 chunks
-🧠 Creating embeddings...
-✅ Ready!
+Document path: handbook.pdf
+Loaded 5420 chars
+Created 5 chunks
+Creating 5 embeddings...
+  5/5
+Ready!
 
-Question: What's the vacation policy?
-Answer: Employees get 15 days PTO per year...
+Q: What's the vacation policy?
 
-Question: quit
+Relevant chunks:
+  Chunk 2: 0.856
+  Chunk 1: 0.723
+  Chunk 0: 0.634
+
+A: Employees receive 15 days PTO per year.
+
+Q: quit
+Save? (y/n): y
+Filename: session.txt
+Saved to session.txt
 ```
 
-## What I Learned
+## How it works
 
-- Building RAG systems from scratch
-- Working with OpenAI embeddings API
-- Semantic search with vector similarity
-- Token-based text chunking
-```
+1. Splits document into 1000-token chunks with 200-token overlap
+2. Converts each chunk to a vector using OpenAI embeddings
+3. For questions, finds most similar chunks using cosine similarity
+4. Sends only relevant chunks to GPT for answers
+
+## Author
+
+Rafael Miyamoto
