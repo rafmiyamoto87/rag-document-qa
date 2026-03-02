@@ -62,6 +62,13 @@ Saved to session.txt
 3. For questions, finds most similar chunks using cosine similarity
 4. Sends only relevant chunks to GPT for answers
 
+## Versions
+
+-`rag_qa.py` - Functional implementation
+-`rag_qa_oop.py` - OOP implementation with DocumentQA class
+
+Both versions provide the same functionality.
+
 ## Author
 
 Rafael Miyamoto
