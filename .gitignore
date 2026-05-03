@@ -1,6 +1,7 @@
 .env
 __pycache__/
 *.pyc
-*.txt
 *.json
 venv/
+session*.txt
+*.streamlit/
