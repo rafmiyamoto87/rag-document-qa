@@ -77,23 +77,44 @@ with st.sidebar:
 
 if not file:
     st.info("← Upload a document to start")
+    
+    st.markdown("""
+    ### How to use:
+    1. Upload a PDF or text file using the sidebar
+    2. Wait for the document to process
+    3. Ask questions about the content
+    4. Get AI-powered answers based on the document
+    
+    ### Example questions:
+    - "What is the main topic of this document?"
+    - "Summarize the key points"
+    - "What does it say about [specific topic]?"
+    """)
 else:
     if 'ready' not in st.session_state:
-        with st.spinner("Processing..."):
-            if file.name.endswith('.pdf'):
-                content = read_pdf(file)
-            else:
-                content = file.read().decode('utf-8')
-            
-            chunks = chunk(content)
-            st.info(f"Embedding {len(chunks)} chunks...")
-            embeddings = embed_all(chunks)
-            
-            st.session_state.content = content
-            st.session_state.chunks = chunks
-            st.session_state.embeddings = embeddings
-            st.session_state.ready = True
-            st.session_state.history = []
+        try:
+            with st.spinner("Processing..."):
+                if file.name.endswith('.pdf'):
+                    content = read_pdf(file)
+                else:
+                    content = file.read().decode('utf-8')
+                
+                if not content or len(content) < 50:
+                    st.error("Document appears to be empty or unreadable")
+                    st.stop()
+                
+                chunks = chunk(content)
+                st.info(f"Embedding {len(chunks)} chunks...")
+                embeddings = embed_all(chunks)
+                
+                st.session_state.content = content
+                st.session_state.chunks = chunks
+                st.session_state.embeddings = embeddings
+                st.session_state.ready = True
+                st.session_state.history = []
+        except Exception as e:
+            st.error(f"Error processing document: {str(e)}")
+            st.stop()
     
     c1, c2, c3 = st.columns(3)
     c1.metric("Characters", f"{len(st.session_state.content):,}")
@@ -140,3 +161,6 @@ else:
     if st.button("Clear Chat"):
         st.session_state.history = []
         st.rerun()
+
+st.divider()
+st.markdown("Built by Rafael Miyamoto | [GitHub](https://github.com/rafmiyamoto87/rag-document-qa)")
